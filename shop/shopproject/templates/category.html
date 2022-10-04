@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block metadescription %}
+  {% if category %}
+       {{product.description|truncatewords:155}}
+  {% else  %}
+      welcome to ABC store
+  {% endif %}
+{% endblock %}
+{% block title %}
+  {% if category %}
+       {{category.name}} - ABC
+  {% else  %}
+      see our new collections
+  {% endif %}
+{% endblock%}
+
+ {% block content %}
+{% if category %}
+<div >
+    <div class="row my_row_class">
+        <div class="mx-auto">
+        <a href="{% url 'shopapp:allprodcat' %}">Our Products</a>
+    </div>
+        </div>
+</div>
+{% endif %}
+{% if category %}
+<div >
+    <img class="my_image" src="{{category.image.url}}"alt="{{category.name}}">
+</div>
+<br>
+<div>
+    <h1 class="text-center my_text">{{category.name}}</h1>
+    <p class="text-justify my_text">{{category.description}}</p>
+    <br>
+</div>
+{% else %}
+<div>
+    <img src="{% static 'img/banner.jpg' %}" alt="our products" width="100%;" height="400px;">
+    <br>
+</div>
+<div>
+    <h2 class="text-center my_text"><b>Our Products</b></h2>
+    <p class="text-justify my_text ">Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source.</p>
+</div>
+{% endif %}
+<div class="container">
+    <div class="row mx_auto">
+        {% for product in products.object_list %}
+
+        <div class="my_bottom_margin col-9 col-sm-12 col-md-4  xol-lg-4 ">
+            <div class="card text-center" style="min-width:18rem;">
+                <a  href="{{ product.get_url }}"><img class="card-img-top my_image" src="{{product.image.url}}" width="150px;" height="150px;" alt="{{product.name}}"></a>
+
+            <div class="card-body">
+                <h2>{{product.name}}</h2>
+                <h4>${{product.price}}</h4>
+                </div>
+         </div>
+        </div>
+
+        {% endfor %}
+    </div>
+    <div class="mx_auto">
+        {% if products.paginator.num_pages > 1 %}
+        <hr>
+        <div class="text-center">
+            {% for pg in products.paginator.page_range %}
+                 <a href="?page={{pg}}" class="btn btn-light btn-sm {% if products.number == pg%} active {% endif %}">{{pg}}</a>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+    {% endblock %}
